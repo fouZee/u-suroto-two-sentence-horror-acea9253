@@ -6,7 +6,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const STORY =
-  "The new tenants asked why the previous family left the nursery light on every night, and I told them it was just an old wiring fault. Tonight the bulb burned out, and in the dark I finally heard the small voice that had been asking it to stay on.";
+  "The new tenants asked why the previous family left the nursery light on every night, and I told them it was just an old wiring fault. Tonight the bulb burned out, and in the dark I finally heard the small voice that had been begging us to keep it on.";
 
 const MAX_CHARS = 400;
 
@@ -21,9 +21,23 @@ function validate(text: string): void {
   if (text.trim().length === 0) {
     throw new Error("entry is empty or only whitespace");
   }
+  if (text !== text.trim()) {
+    throw new Error("entry must not have leading or trailing whitespace");
+  }
+  // One line only: a newline or control character would break the
+  // two-sentence reading and waste the 400-character budget.
+  if (/[\r\n\x00-\x1f]/.test(text)) {
+    throw new Error("entry must be a single line with no control characters");
+  }
   const chars = [...text].length;
   if (chars < 1 || chars > MAX_CHARS) {
     throw new Error(`entry must be 1-${MAX_CHARS} characters, got ${chars}`);
+  }
+  // Exactly two sentence terminators, so the text is two sentences and
+  // not two sentences plus an abbreviation or stray punctuation.
+  const terminators = text.match(/[.!?]+/g) ?? [];
+  if (terminators.length !== 2) {
+    throw new Error(`entry must end exactly two sentences, got ${terminators.length} terminators`);
   }
   const sentences = sentenceCount(text);
   if (sentences !== 2) {

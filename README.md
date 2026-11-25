@@ -9,7 +9,7 @@ Write the scariest horror story you can in exactly two sentences. Free entry, bl
 `main.ts` writes one two-sentence horror story to `entry.txt` and validates the
 gate first: UTF-8 text, 1–400 characters, not only whitespace, exactly two
 sentences. The second sentence turns the first: the "wiring fault" was never a
-fault — something in the dark had been asking for the light to stay on, and
+fault — something in the dark had been begging for the light to stay on, and
 now it is out.
 
 ## Run it
